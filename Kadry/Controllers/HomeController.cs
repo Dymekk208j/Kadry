@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Kadry.Models;
 
 namespace Kadry.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly SQLConnection _sqlConnection = new SQLConnection();
+
         public ActionResult Index()
         {
-            return View();
+
+            return View(new Login());
         }
 
-        public ActionResult About()
+        public ActionResult About(int id)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            Employeer employer = _sqlConnection.GetEmployer(id);
+            return View(employer);
         }
 
         public ActionResult Contact()
@@ -25,6 +28,21 @@ namespace Kadry.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult Login(Login login)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_sqlConnection.IsPasswordCorrect(login.Username, login.Password))
+                {
+                    int loginid = _sqlConnection.GetLoginId(login.Username);
+                    return RedirectToAction("About", new  { id = _sqlConnection.GetUserId ( loginid ) } );
+                }
+            }
+            
+                return RedirectToAction("Index");
+            
         }
     }
 }
