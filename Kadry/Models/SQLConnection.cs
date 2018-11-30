@@ -52,8 +52,9 @@ namespace Kadry.Models
                         Pesel = reader["Pesel"].ToString(),
                         Birthday = DateTime.Parse(reader["Birth_date"].ToString()),
                         ContractDate = DateTime.Parse(reader["Contract_date"].ToString()),
-                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString())
-                    };
+                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString()),
+                        Sex = reader["Sex"].ToString()
+                   };
                     listEmployeers.Add(employer);
                 }
             }
@@ -64,6 +65,7 @@ namespace Kadry.Models
 
             return listEmployeers;
         }
+
         public Employeer GetEmployer(int id)
         {
             Employeer employer = new Employeer();
@@ -83,11 +85,10 @@ namespace Kadry.Models
                         Pesel = reader["Pesel"].ToString(),
                         Birthday = DateTime.Parse(reader["Birth_date"].ToString()),
                         ContractDate = DateTime.Parse(reader["Contract_date"].ToString()),
-                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString())
+                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString()),
+                        Sex = reader["Sex"].ToString()
                     };
-                    int i = int.Parse(reader["Sex"].ToString());
 
-                    employer.Sex = i != 0;
                     var idContractType = int.Parse(reader["id_Contract_type"].ToString());
                     var idWorkplace = int.Parse(reader["id_Workplace"].ToString());
                     var idHoliday = int.Parse(reader["id_Holiday"].ToString());
@@ -373,6 +374,8 @@ namespace Kadry.Models
             return result;
         
     }
+
+
     }
 
 

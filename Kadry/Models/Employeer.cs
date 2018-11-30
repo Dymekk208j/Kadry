@@ -23,7 +23,7 @@ namespace Kadry.Models
         public DateTime Birthday { get; set; }
 
         [Display(Name = "Płeć: ")]
-        public bool Sex { get; set; }
+        public string Sex { get; set; }
 
         public Login Login { get; set; }
         public Workplace Workplace { get; set; }

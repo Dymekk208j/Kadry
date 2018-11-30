@@ -17,5 +17,11 @@ namespace Kadry.Controllers
             var list = _sqlConnection.GetAllEmployeers(); 
             return View(list);
         }
+
+        public ActionResult DetailsEmployeer(int id)
+        {
+            var employer = _sqlConnection.GetEmployer(id);
+            return View(employer);
+        }
     }
 }
