@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Kadry.Models
 {
     public class Employeer
     {
+        private static readonly SQLConnection _sqlConnection = new SQLConnection();
+
         public int Id { get; set; }
 
         [Display(Name="Nazwisko: ")]
@@ -38,5 +41,15 @@ namespace Kadry.Models
 
         [Display(Name = "Data zakończenia umowy: ")]
         public DateTime ContractEndDate { get; set; }
+
+        public static List<ContractType> GetContractTypeList()
+        {
+            return _sqlConnection.ContractTypeList();
+        }
+
+        public static List<Workplace> GetWorkplaceList()
+        {
+            return _sqlConnection.WorkplaceList();
+        }
     }
 }

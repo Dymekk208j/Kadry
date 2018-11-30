@@ -31,6 +31,59 @@ namespace Kadry.Models
             return new SqlCommand(query, _connection); //_c oznacza, że zmienna jest prywatna
         }
 
+        public List<ContractType> ContractTypeList()
+        {
+            List<ContractType> list = new List<ContractType>();
+
+            string query = "SELECT * FROM Contract_type";
+            SqlDataReader reader = Execute(query).ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    var contractType = new ContractType()
+                    {
+                        Id = int.Parse(reader["Id"].ToString()),
+                        Name = reader["Contract_name"].ToString()
+                    };
+                    list.Add(contractType);
+                }
+            }
+            finally
+            {
+                if (!reader.IsClosed) reader.Close();
+            }
+
+            return list;
+        }
+
+        public List<Workplace> WorkplaceList()
+        {
+            List<Workplace> list = new List<Workplace>();
+
+            string query = "SELECT * FROM Workplace";
+            SqlDataReader reader = Execute(query).ExecuteReader();
+            try
+            {
+                while (reader.Read())
+                {
+                    var workplace = new Workplace()
+                    {
+                        Id = int.Parse(reader["Id"].ToString()),
+                        Name = reader["Workplace"].ToString()
+                    };
+                    list.Add(workplace);
+                }
+            }
+            finally
+            {
+                if (!reader.IsClosed) reader.Close();
+            }
+
+            return list;
+        }
+
         public List<Employeer> GetAllEmployeers()
         {
 
