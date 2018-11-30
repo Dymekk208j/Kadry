@@ -13,7 +13,6 @@ namespace Kadry.Controllers
 
         public ActionResult Index()
         {
-
             return View(new Login());
         }
 
@@ -37,6 +36,9 @@ namespace Kadry.Controllers
                 if (_sqlConnection.IsPasswordCorrect(login.Username, login.Password))
                 {
                     int loginid = _sqlConnection.GetLoginId(login.Username);
+
+                   HttpCookie cookie = new HttpCookie("LoginCookie", _sqlConnection.GetUserId(loginid).ToString());
+                   Response.SetCookie(cookie);
                     return RedirectToAction("About", new  { id = _sqlConnection.GetUserId ( loginid ) } );
                 }
             }

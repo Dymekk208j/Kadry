@@ -1,16 +1,30 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kadry.Models
 {
     public class Employeer
     {
         public int Id { get; set; }
+
+        [Display(Name="Nazwisko: ")]
         public string Surname { get; set; }
+
+        [Display(Name = "Imię: ")]
         public string Firstname { get; set; }
+
+        [Display(Name = "Drugie imię: ")]
         public string MiddleName { get; set; }
+
+        [Display(Name = "PESEL: ")]
         public string Pesel { get; set; }
+
+        [Display(Name = "Data urodzenia: ")]
         public DateTime Birthday { get; set; }
+
+        [Display(Name = "Płeć: ")]
         public bool Sex { get; set; }
+
         public Login Login { get; set; }
         public Workplace Workplace { get; set; }
         public Holiday Holiday { get; set; }
@@ -18,5 +32,11 @@ namespace Kadry.Models
         public Medical Medical { get; set; }
         public Salary Salary { get; set; }
         public Hours Hours { get; set; }
+
+        [Display(Name = "Data zawarcia umowy: ")]
+        public DateTime ContractDate { get; set; }
+
+        [Display(Name = "Data zakończenia umowy: ")]
+        public DateTime ContractEndDate { get; set; }
     }
 }

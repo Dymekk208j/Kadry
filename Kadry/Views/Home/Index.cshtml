@@ -1,4 +1,7 @@
 ﻿@model Kadry.Models.Login
+@{
+    Layout = "";
+}
 
 @using (Html.BeginForm("Login", "Home"))
 {
@@ -8,6 +11,7 @@
             <div class="card-body">
                 <h5 class="card-title">Logowanie</h5>
 
+               
 
                 <div class="form-group">
                     @Html.LabelFor(m => m.Username)

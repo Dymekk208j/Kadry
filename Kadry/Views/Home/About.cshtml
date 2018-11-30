@@ -1,10 +1,82 @@
-﻿@model Kadry.Models.Employeer
-    
+﻿
+@model Kadry.Models.Employeer
+
 <div class="row">
     <div class="col">
+        
         <p>
-            Zalogowany użytkownik: @Html.Name(Model.Firstname)
-
+            @Html.LabelFor(m => m.Firstname)
+            @Html.Name(Model.Firstname)
         </p>
+
+        @{
+            if (string.IsNullOrEmpty(Model.MiddleName))
+            {
+                <p>
+                    @Html.LabelFor(m => m.MiddleName)
+                    @Html.Name(Model.MiddleName)
+                </p>
+            }
+        }
+
+        <p>
+            @Html.LabelFor(m => m.Surname)
+            @Html.Name(Model.Surname)
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.Pesel)
+            @Html.Name(Model.Pesel)
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.Birthday)
+            @Html.Name(Model.Birthday.ToShortDateString())
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.Sex)
+            @Html.Name(Model.Sex.ToString())
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.Workplace.Name)
+            @Html.Name(Model.Workplace.Name)
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.Holiday.RemainingHoliday)
+            @Html.Name(Model.Holiday.RemainingHoliday.ToString())
+        </p>
+
+        <p>
+            @Html.LabelFor(m => m.ContractType.Name)
+            @Html.Name(Model.ContractType.Name)
+        </p>
+
+
+        <p>
+            @Html.LabelFor(m => m.Salary.Total)
+            @Html.Name(Model.Salary.Total.ToString())
+        </p>
+
+
+        <p>
+            @Html.LabelFor(m => m.Hours.HoursWorked)
+            @Html.Name(Model.Hours.HoursWorked.ToString())
+        </p>
+
+
+        <p>
+            @Html.LabelFor(m => m.ContractDate)
+            @Html.Name(Model.ContractDate.ToShortDateString())
+        </p>
+
+
+        <p>
+            @Html.LabelFor(m => m.ContractEndDate)
+            @Html.Name(Model.ContractEndDate.ToShortDateString())
+        </p>
+
     </div>
 </div>

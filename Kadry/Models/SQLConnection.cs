@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 
@@ -10,7 +10,7 @@ namespace Kadry.Models
         // private string connectionString = "Data Source=DESKTOP-VR8CI70;Initial Catalog=PortfolioWebAppV2;Integrated Security=True;Pooling=False";
         //string connectionString = @"Server=.\DESKTOP-VR8CI70;Database=Kadry;Integrated Security=True;";
         private readonly string connectionString =
-            "Data Source=DESKTOP-VR8CI70;Initial Catalog=Kadry;Integrated Security=True;Pooling=False";
+            "Data Source=DESKTOP-BKQHCMV;Initial Catalog=Kadry;Integrated Security=True;Pooling=False";
 
         private readonly SqlConnection _connection; // wartosc tylko do odczytu w zakresie klasy
 
@@ -24,7 +24,6 @@ namespace Kadry.Models
         ~SQLConnection()
         {
             _connection.Close();
-
         }
 
         private SqlCommand Execute(string query) //wykonuje query , aby nie było trzeba dodawać ścieżki 
@@ -32,6 +31,39 @@ namespace Kadry.Models
             return new SqlCommand(query, _connection); //_c oznacza, że zmienna jest prywatna
         }
 
+        public List<Employeer> GetAllEmployeers()
+        {
+
+            List<Employeer> listEmployeers = new List<Employeer>();
+            string query = "SELECT * FROM Employeer";
+           
+            SqlDataReader reader = Execute(query).ExecuteReader();
+            try
+            {
+
+                while (reader.Read())
+                {
+                   var employer = new Employeer()
+                    {
+                        Id = int.Parse(reader["Id"].ToString()),
+                        Firstname = reader["First_name"].ToString(),
+                        Surname = reader["Surname"].ToString(),
+                        MiddleName = reader["Middle_name"].ToString(),
+                        Pesel = reader["Pesel"].ToString(),
+                        Birthday = DateTime.Parse(reader["Birth_date"].ToString()),
+                        ContractDate = DateTime.Parse(reader["Contract_date"].ToString()),
+                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString())
+                    };
+                    listEmployeers.Add(employer);
+                }
+            }
+            finally
+            {
+                if (!reader.IsClosed) reader.Close();
+            }
+
+            return listEmployeers;
+        }
         public Employeer GetEmployer(int id)
         {
             Employeer employer = new Employeer();
@@ -44,22 +76,24 @@ namespace Kadry.Models
                 {
                     employer = new Employeer()
                     {
+                        Id = int.Parse(reader["Id"].ToString()),
                         Firstname = reader["First_name"].ToString(),
                         Surname = reader["Surname"].ToString(),
                         MiddleName = reader["Middle_name"].ToString(),
                         Pesel = reader["Pesel"].ToString(),
                         Birthday = DateTime.Parse(reader["Birth_date"].ToString()),
-                        
+                        ContractDate = DateTime.Parse(reader["Contract_date"].ToString()),
+                        ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString())
                     };
-                    int i = Int32.Parse(reader["Sex"].ToString());
+                    int i = int.Parse(reader["Sex"].ToString());
 
                     employer.Sex = i != 0;
-                    var idContractType = Int32.Parse(reader["id_Contract_type"].ToString());
-                    var idWorkplace = Int32.Parse(reader["id_Workplace"].ToString());
-                    var idHoliday = Int32.Parse(reader["id_Holiday"].ToString());
-                    var idMedical = Int32.Parse(reader["id_Medical"].ToString());
-                    var idSalary = Int32.Parse(reader["id_Salary"].ToString());
-                    var idHours = Int32.Parse(reader["id_Hours"].ToString());
+                    var idContractType = int.Parse(reader["id_Contract_type"].ToString());
+                    var idWorkplace = int.Parse(reader["id_Workplace"].ToString());
+                    var idHoliday = int.Parse(reader["id_Holiday"].ToString());
+                    var idMedical = int.Parse(reader["id_Medical"].ToString());
+                    var idSalary = int.Parse(reader["id_Salary"].ToString());
+                    var idHours = int.Parse(reader["id_Hours"].ToString());
 
                     reader.Close();
 
@@ -92,7 +126,7 @@ namespace Kadry.Models
                 {
                     contract = new ContractType()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
+                        Id = int.Parse(reader["id"].ToString()),
                         Name = reader["Contract_name"].ToString()
                     };
                 }
@@ -118,7 +152,7 @@ namespace Kadry.Models
                 {
                     workplace = new Workplace()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
+                        Id = int.Parse(reader["id"].ToString()),
                         Name = reader["Workplace"].ToString()
                     };
                 }
@@ -144,10 +178,10 @@ namespace Kadry.Models
                 {
                     holiday = new Holiday()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
-                        HolidayAnuses = Int32.Parse(reader["Holiday_anuses"].ToString()),
-                        RemainingHoliday = Int32.Parse(reader["Remaining_holiday"].ToString()),
-                        Year = Int32.Parse(reader["Year"].ToString())
+                        Id = int.Parse(reader["id"].ToString()),
+                        HolidayAnuses = int.Parse(reader["Holiday_anuses"].ToString()),
+                        RemainingHoliday = int.Parse(reader["Remaining_holiday"].ToString()),
+                        Year = int.Parse(reader["Year"].ToString())
                     };
                 }
 
@@ -172,9 +206,9 @@ namespace Kadry.Models
                 {
                     medical = new Medical()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
+                        Id = int.Parse(reader["id"].ToString()),
                         ExpirationTime = DateTime.Parse(reader["Expiration_date"].ToString()),
-                        Number = Int32.Parse(reader["Number"].ToString())
+                        Number = int.Parse(reader["Number"].ToString())
                     };
                 }
 
@@ -191,24 +225,22 @@ namespace Kadry.Models
         public Salary GetSalary(int id)
         {
             Salary salary = new Salary();
-            string query = "SELECT * FROM Salary WHERE id = " + id.ToString();
+            string query = "SELECT TOP 1 * FROM dbo.Salary  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
             SqlDataReader reader = Execute(query).ExecuteReader();
-            var monthId = "";
-
+          
             try
             {
                 while (reader.Read())
                 {
                     salary = new Salary()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
+                        Id = int.Parse(reader["id"].ToString()),
                         Base = Decimal.Parse(reader["Base"].ToString()),
                         Bonus = Decimal.Parse(reader["Bonus"].ToString()),
                         Overtime = Decimal.Parse(reader["Overtime"].ToString()),
                         Total = Decimal.Parse(reader["Total"].ToString())
                      };
 
-                    monthId = reader["id_Month"].ToString();
                 }
             }
             finally
@@ -216,45 +248,15 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-            salary.Month = GetMonth(Int32.Parse(monthId));
-
+           
             return salary;
-
-        }
-
-        public Month GetMonth(int id)
-        {
-            Month month = new Month();
-            string query = "SELECT * FROM Month WHERE id = " + id.ToString();
-            SqlDataReader executeReader = Execute(query).ExecuteReader(); //executeReader, nowa nazwa, bo inaczej niewiadomo do czego się odwołuje
-
-            try
-            {
-                while (executeReader.Read())
-                {
-                    month = new Month()
-                    {
-                        Id = Int32.Parse(executeReader["id"].ToString()),
-                        Name = executeReader["Name"].ToString(),
-                        NumberOfMonth = Int32.Parse(executeReader["Number_of_month"].ToString()),
-                    };
-                }
-
-            }
-            finally
-            {
-                executeReader.Close();
-            }
-
-            return month;
 
         }
 
         public Hours GetHours(int id)
         {
             Hours hours = new Hours();
-            var monthId = "";
-            string query = "SELECT * FROM Hours WHERE id = " + id.ToString();
+            string query = "SELECT TOP 1 * FROM dbo.Hours  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
@@ -262,12 +264,10 @@ namespace Kadry.Models
                 {
                     hours = new Hours()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
+                        Id = int.Parse(reader["id"].ToString()),
                         HoursWorked = Decimal.Parse(reader["Hours_worked"].ToString()),
                         QuantityOvertime = Decimal.Parse(reader["Quantity_overtime"].ToString())
                     };
-                    monthId = reader["id_Month"].ToString();
-                    
                 }
 
             }
@@ -276,21 +276,21 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-            hours.Month = GetMonth(Int32.Parse(monthId));
+         
             return hours;
 
         }
 
         public bool IsPasswordCorrect(string username, string password)
         {
-            bool _IsPasswordCorrect = false;
+            bool isPasswordCorrect = false;
             string query = "SELECT * FROM LOGIN WHERE login = '" + username+ "'";
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
                 while (reader.Read())
                 {
-                     _IsPasswordCorrect = (reader["Password"].ToString() == password);
+                     isPasswordCorrect = (reader["Password"].ToString() == password);
 
                 }
 
@@ -300,7 +300,7 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-            return _IsPasswordCorrect;
+            return isPasswordCorrect;
 
         }
 
@@ -336,7 +336,7 @@ namespace Kadry.Models
                 while (reader.Read())
 
                 {
-                    result = Int32.Parse(reader["id"].ToString());
+                    result = int.Parse(reader["id"].ToString());
                    
                 }
 
@@ -359,7 +359,7 @@ namespace Kadry.Models
                 while (reader.Read())
 
                 {
-                    result = Int32.Parse(reader["id"].ToString());
+                    result = int.Parse(reader["id"].ToString());
                     
 
                 }
