@@ -18,5 +18,6 @@ namespace Kadry.Controllers
             var employer = _sqlConnection.GetEmployer(id);
             return View(employer);
         }
+
     }
 }
