@@ -7,14 +7,13 @@ namespace Kadry.Controllers
     {
         private readonly SQLConnection _sqlConnection = new SQLConnection();
 
-        // GET: Admin
-        public ActionResult EmployeerList()
+        public ActionResult EmployerList()
         {
             var list = _sqlConnection.GetAllEmployeers(); 
             return View(list);
         }
 
-        public ActionResult DetailsEmployeer(int id)
+        public ActionResult DetailsEmployer(int id)
         {
             var employer = _sqlConnection.GetEmployer(id);
             return View(employer);
