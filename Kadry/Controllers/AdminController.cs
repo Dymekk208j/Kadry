@@ -19,5 +19,13 @@ namespace Kadry.Controllers
             return View(employer);
         }
 
+        [HttpPost]
+        public ActionResult CreateEmployer(Employeer employer)
+        {
+            _sqlConnection.CreateEmployer(employer);
+
+            return RedirectToAction("EmployerList");
+        }
+
     }
 }

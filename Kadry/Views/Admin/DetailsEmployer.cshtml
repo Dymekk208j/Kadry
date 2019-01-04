@@ -10,30 +10,35 @@
 }
 
 @{
-    using (Html.BeginForm("Add", "Education"))
+    using (Html.BeginForm("CreateEmployer", "Admin"))
     {
         <div class="row">
             <div class="col-7">
+
                 @Html.HiddenFor(m => m.Id)
+
+                @Html.LabelFor(m => m.Login.Id)
+                @Html.EditorFor(m => m.Login.Id, new {htmlAttributes = new {@class = "form-control"}})
+
                 <p>
                     @Html.LabelFor(m => m.Firstname)
-                    @Html.EditorFor(m => m.Firstname, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.Firstname, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
 
                 <p>
                     @Html.LabelFor(m => m.MiddleName)
-                    @Html.EditorFor(m => m.MiddleName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.MiddleName, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
                 <p>
                     @Html.LabelFor(m => m.Surname)
-                    @Html.EditorFor(m => m.Surname, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.Surname, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
                 <p>
                     @Html.LabelFor(m => m.Pesel)
-                    @Html.EditorFor(m => m.Pesel, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.Pesel, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
                 <p>
@@ -43,22 +48,26 @@
 
                 <p>
                     @Html.LabelFor(m => m.Sex)
-                    @Html.EditorFor(m => m.Sex, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.Sex, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
                 <p>
                     @Html.LabelFor(m => m.ContractType)
-                    @Html.DropDownListFor(model => model.ContractType.Id, new SelectList(Employeer.GetContractTypeList(), "Id", "Name"), new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.ContractType.Id, new SelectList(Employeer.GetContractTypeList(), "Id", "Name"), new {@class = "form-control"})
+                    @Html.EditorFor(m => m.ContractType.Name, new { htmlAttributes = new { @class = "form-control" } })
+
                 </p>
 
                 <p>
                     @Html.LabelFor(m => m.Holiday.RemainingHoliday)
-                    @Html.EditorFor(m => m.Holiday.RemainingHoliday, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(m => m.Holiday.RemainingHoliday, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
 
                 <p>
                     @Html.LabelFor(m => m.Workplace)
                     @Html.DropDownListFor(model => model.Workplace.Id, new SelectList(Employeer.GetWorkplaceList(), "Id", "Name"), new { @class = "form-control" })
+                    @Html.EditorFor(m => m.Workplace.Name, new { htmlAttributes = new { @class = "form-control" } })
+
                 </p>
 
                 <p>
@@ -83,7 +92,7 @@
 
         <div class="float-right">
             <button type="button" class="btn btn-danger">Usuń</button>
-            <button type="button" class="btn btn-primary">Aktualizuj</button>
+            <button type="submit" class="btn btn-primary">Aktualizuj</button>
         </div>
         <!-- Modal od zarządzania urlopami -->
         <div class="modal fade" id="HolidayManagement" tabindex="-1" role="dialog" aria-labelledby="HolidayManagementLabel" aria-hidden="true">

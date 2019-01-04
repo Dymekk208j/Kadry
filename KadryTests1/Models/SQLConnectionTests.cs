@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Kadry.Models;
+using Xunit;
 
 namespace Kadry.Models.Tests
 {
@@ -24,6 +25,17 @@ namespace Kadry.Models.Tests
 
             Assert.Equal(100.0M, result.HoursWorked);
             Assert.Equal(0.0M, result.QuantityOvertime);
+
+        }
+
+        [Fact()]
+        public void CreateOrUpdateWorkplaceTest()
+        {
+            SQLConnection _databaseUnderTests2 = new SQLConnection();
+            _databaseUnderTests2.CreateOrUpdateWorkplace("Magazynier");
+
+
+            Assert.True(true);
 
         }
     }

@@ -89,14 +89,14 @@ namespace Kadry.Models
 
             List<Employeer> listEmployeers = new List<Employeer>();
             string query = "SELECT * FROM Employeer";
-           
+
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
 
                 while (reader.Read())
                 {
-                   var employer = new Employeer()
+                    var employer = new Employeer()
                     {
                         Id = int.Parse(reader["Id"].ToString()),
                         Firstname = reader["First_name"].ToString(),
@@ -107,7 +107,7 @@ namespace Kadry.Models
                         ContractDate = DateTime.Parse(reader["Contract_date"].ToString()),
                         ContractEndDate = DateTime.Parse(reader["Contract_end_date"].ToString()),
                         Sex = reader["Sex"].ToString()
-                   };
+                    };
                     listEmployeers.Add(employer);
                 }
             }
@@ -163,7 +163,7 @@ namespace Kadry.Models
             }
             finally
             {
-                if(!reader.IsClosed) reader.Close();
+                if (!reader.IsClosed) reader.Close();
             }
 
             return employer;
@@ -218,9 +218,32 @@ namespace Kadry.Models
             }
 
             return workplace;
-
         }
 
+        public Workplace GetWorkplace(string name)
+        {
+            Workplace workplace = new Workplace();
+            string query = "SELECT * FROM Workplace WHERE Workplace = " + name;
+            SqlDataReader reader = Execute(query).ExecuteReader();
+            try
+            {
+                while (reader.Read())
+                {
+                    workplace = new Workplace()
+                    {
+                        Id = int.Parse(reader["id"].ToString()),
+                        Name = reader["Workplace"].ToString()
+                    };
+                }
+
+            }
+            finally
+            {
+                reader.Close();
+            }
+
+            return workplace;
+        }
         public Holiday GetHoliday(int id)
         {
             Holiday holiday = new Holiday();
@@ -281,7 +304,7 @@ namespace Kadry.Models
             Salary salary = new Salary();
             string query = "SELECT TOP 1 * FROM dbo.Salary  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
             SqlDataReader reader = Execute(query).ExecuteReader();
-          
+
             try
             {
                 while (reader.Read())
@@ -293,7 +316,7 @@ namespace Kadry.Models
                         Bonus = Decimal.Parse(reader["Bonus"].ToString()),
                         Overtime = Decimal.Parse(reader["Overtime"].ToString()),
                         Total = Decimal.Parse(reader["Total"].ToString())
-                     };
+                    };
 
                 }
             }
@@ -302,7 +325,7 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-           
+
             return salary;
 
         }
@@ -330,7 +353,7 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-         
+
             return hours;
 
         }
@@ -338,13 +361,13 @@ namespace Kadry.Models
         public bool IsPasswordCorrect(string username, string password)
         {
             bool isPasswordCorrect = false;
-            string query = "SELECT * FROM LOGIN WHERE login = '" + username+ "'";
+            string query = "SELECT * FROM LOGIN WHERE login = '" + username + "'";
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
                 while (reader.Read())
                 {
-                     isPasswordCorrect = (reader["Password"].ToString() == password);
+                    isPasswordCorrect = (reader["Password"].ToString() == password);
 
                 }
 
@@ -383,7 +406,7 @@ namespace Kadry.Models
         public int GetUserId(int idLogin)
         {
             int result = -1;
-            string query = "SELECT ID FROM EMPLOYEER WHERE ID_login  = " + idLogin.ToString() ;
+            string query = "SELECT ID FROM EMPLOYEER WHERE ID_login  = " + idLogin.ToString();
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
@@ -391,7 +414,7 @@ namespace Kadry.Models
 
                 {
                     result = int.Parse(reader["id"].ToString());
-                   
+
                 }
 
             }
@@ -406,7 +429,7 @@ namespace Kadry.Models
         public int GetLoginId(string username)
         {
             int result = -1;
-            string query = "SELECT ID FROM Login WHERE  Login= '" + username +"'";
+            string query = "SELECT ID FROM Login WHERE  Login= '" + username + "'";
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
@@ -414,7 +437,7 @@ namespace Kadry.Models
 
                 {
                     result = int.Parse(reader["id"].ToString());
-                    
+
 
                 }
 
@@ -425,9 +448,247 @@ namespace Kadry.Models
             }
 
             return result;
-        
-    }
 
+        }
+        private int GetLastId(string tableName)
+        {
+            int returnId = -1;
+            string query = "SELECT TOP(1) [id] FROM [" + tableName + "] ORDER BY [Id] DESC";
+            SqlDataReader reader2 = Execute(query).ExecuteReader();
+            try
+            {
+                while (reader2.Read())
+                {
+                    returnId = int.Parse(reader2["id"].ToString());
+                }
+            }
+            finally
+            {
+                reader2.Close();
+            }
+
+            return returnId;
+        }
+        public int CreateOrUpdateWorkplace(Workplace workplace)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Workplace ([Workplace]) VALUES ('" + workplace + "')";
+
+            Workplace workpl = GetWorkplace(workplace.Id);
+            if (workpl != null)
+            {
+                query = " UPDATE Workplace SET [Workplace] = (' " + workplace + "') WHERE id= " + workpl.Id;
+                returnId = workpl.Id;
+            }
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+
+            return GetLastId("Workplace");
+        }
+
+
+
+        public int CreateOrUpdateMedical(Medical medical)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Medical ([Expiraton_date], [Number]) VALUES ('" + medical.ExpirationTime + "'," +
+                           medical.Number + ")";
+
+
+            Medical med = GetMedical(medical.Id);
+            if (med != null)
+            {
+                query = " UPDATE Medical SET [Expiration_date] = '" + medical.ExpirationTime.ToString("yyyy-MM-DD") +
+                        "',[Number] = " + medical.Number + "WHERE id=" + medical.Id;
+                returnId = medical.Id;
+            }
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+            return GetLastId("Medical");
+        }
+
+        public int CreateOrUpdateHoliday(Holiday holiday)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Holiday ([Holiday_anuses],[Remaining_holiday],[Year]) VALUES ('" + holiday.HolidayAnuses + "," + holiday.RemainingHoliday + "," + holiday.Year + "')";
+
+
+            Holiday hol = GetHoliday(holiday.Id);
+            if (hol != null)
+            {
+                query = " UPDATE Holiday SET [Holiday_anuses] = '" + holiday.HolidayAnuses +
+                        ", [Remaining_holiday]= " + holiday.RemainingHoliday + ",[Year]=" + holiday.Year +
+                        "WHERE id=" + holiday.Id;
+
+                returnId = holiday.Id;
+
+            }
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+            return GetLastId("Holiday");
+        }
+
+        public int CreateOrUpdateSalary(Salary salary)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Salary [Base],[Bonus],[Overtime],[Total]) VALUES ('" + salary.Base + "," + salary.Bonus + "," + salary.Overtime + "," + salary.Total + "')";
+
+
+            Salary sal = GetSalary(salary.Id);
+            if (sal != null)
+            {
+                query = " UPDATE Salary SET [Base] = '" + salary.Base + ", [Bonus]= " + salary.Bonus + ",[Overtime]=" + salary.Overtime + ",[Total]" + salary.Total + "WHERE id=" + salary.Id;
+                returnId = salary.Id;
+            }
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+            return GetLastId("Salary");
+        }
+
+        public int CreateOrUpdateHours(Hours hours)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Hours [Hours_worked],[Quantity_overtime]) VALUES (" + hours.HoursWorked + "," + hours.QuantityOvertime + ")";
+
+
+            Hours hou = GetHours(hours.Id);
+            if (hou != null)
+            {
+                query = " UPDATE Hours SET [Hours_worked] = " + hours.HoursWorked + ", [Quantity_overtime]= " + hours.QuantityOvertime + "WHERE id=" + hours.Id;
+                returnId = hours.Id;
+            }
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+            return GetLastId("Hours");
+        }
+
+        public int CreateOrUpdateContract(ContractType contract)
+        {
+            int returnId = -1;
+
+            string query = "INSERT INTO Contract_type VALUES ('" + contract.Name + "')";
+
+
+            ContractType con = GetContractType(contract.Id);
+            if (con != null)
+            {
+                query = " UPDATE Contract_type SET [Contract_name] = '" + contract.Name + "' WHERE id=" + contract.Id;
+                returnId = contract.Id;
+
+            }
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+            return GetLastId("Contract_type");
+        }
+
+        public int CreateEmployer(Employeer employer)
+        {
+            int returnId = -1;
+
+            string query =
+                "INSERT INTO [dbo].[Employeer]" +
+                "([Surname]" +
+                ",[First_name]" +
+                ",[Middle_name]" +
+                ",[Pesel]" +
+                ",[Birth_date]" +
+                ",[Sex]" +
+                ",[id_login]" +
+                ",[id_Contract_type]" +
+                ",[id_Hours]" +
+                ",[id_Holiday]" +
+                ",[id_Salary]" +
+                ",[id_Medical]" +
+                ",[id_Workplace]" +
+                ",[Contract_date]" +
+                ",[Contract_end_date])" +
+                "VALUES(" +
+                "'" + employer.Surname + "', " +
+                "'" + employer.Firstname + "', " +
+                "'" + employer.MiddleName + "', " +
+                "'" + employer.Pesel + "', " +
+                "'" + employer.Birthday.ToShortDateString() + "', " +
+                "'" + employer.Sex + "', " +
+                employer.Login.Id.ToString() + ", " +
+
+                 CreateOrUpdateContract(employer.ContractType).ToString() + ", " +
+                 CreateOrUpdateHours(employer.Hours).ToString() + ", " +
+                 CreateOrUpdateHoliday(employer.Holiday).ToString() + ", " +
+                 CreateOrUpdateSalary(employer.Salary).ToString() + ", " +
+                 CreateOrUpdateMedical(employer.Medical).ToString() + ", " +
+                 CreateOrUpdateWorkplace(employer.Workplace).ToString() + "," +
+                "'" + employer.ContractDate.ToShortDateString() + "', " +
+                "'" + employer.ContractEndDate.ToShortDateString() + "')";
+
+            try
+            {
+                Execute(query).ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                return returnId;
+            }
+
+            return GetLastId("Employeer");
+        }
 
     }
 
