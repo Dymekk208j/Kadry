@@ -112,5 +112,12 @@ namespace Kadry.Controllers
             HttpContext.Response.Cookies.Add(new HttpCookie("LoginCookie", "-1"));
             return RedirectToAction("Index", "Home");
         }
+
+        public ActionResult DetailsEmployer(int id)
+        {
+            if (!CheckIfAdmin()) return RedirectToAction("ErrorPage");
+            Employeer employer = _sqlConnection.GetEmployer(id);
+            return View(employer);
+        }
     }
 }

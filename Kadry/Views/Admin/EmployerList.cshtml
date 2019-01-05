@@ -23,7 +23,7 @@
     @{
         foreach (var e in Model)
         {
-        <tr>
+        <tr onclick="location.href = '@Url.Action("DetailsEmployer","Admin",new {e.Id})'">
             <th scope="row">@Html.Name(e.Id.ToString())</th>
             <td>@Html.Name(e.Firstname)</td>
             <td>@Html.Name(e.Surname)</td>

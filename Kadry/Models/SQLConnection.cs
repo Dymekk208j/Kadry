@@ -417,14 +417,14 @@ namespace Kadry.Models
 
         public bool IsAdmin(int id)
         {
-            bool _IsAdmin = false;
+            bool isAdmin = false;
             string query = "SELECT admin FROM LOGIN WHERE id = " + id;
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
                 while (reader.Read())
                 {
-                    _IsAdmin = Convert.ToBoolean(Int32.Parse(reader["Admin"].ToString()));
+                    isAdmin = Convert.ToBoolean(Int32.Parse(reader["Admin"].ToString()));
                 }
 
             }
@@ -433,7 +433,7 @@ namespace Kadry.Models
                 reader.Close();
             }
 
-            return _IsAdmin;
+            return isAdmin;
         }
 
         public int GetUserId(int idLogin)
@@ -520,7 +520,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
 
@@ -552,7 +552,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+               Console.WriteLine(e);
                 return returnId;
             }
 
@@ -583,7 +583,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
 
@@ -610,7 +610,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
 
@@ -637,7 +637,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
             return GetLastId("Hours");
@@ -664,7 +664,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
 
@@ -685,7 +685,7 @@ namespace Kadry.Models
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine(e);
+                   Console.WriteLine(e);
                     return returnId;
                 }
 
@@ -739,7 +739,7 @@ namespace Kadry.Models
             }
             catch (Exception e)
             {
-                System.Console.WriteLine(e);
+                Console.WriteLine(e);
                 return returnId;
             }
 

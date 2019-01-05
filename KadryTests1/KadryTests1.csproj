@@ -63,7 +63,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Models\SQLConnectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +77,9 @@
       <Project>{6B125200-0197-454C-B472-595D5FE21986}</Project>
       <Name>Kadry</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

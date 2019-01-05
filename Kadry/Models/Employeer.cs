@@ -6,7 +6,7 @@ namespace Kadry.Models
 {
     public class Employeer
     {
-        private static readonly SQLConnection _sqlConnection = new SQLConnection();
+        private static readonly SQLConnection SqlConnection = new SQLConnection();
 
         public int Id { get; set; }
 
@@ -44,12 +44,12 @@ namespace Kadry.Models
 
         public static List<ContractType> GetContractTypeList()
         {
-            return _sqlConnection.ContractTypeList();
+            return SqlConnection.ContractTypeList();
         }
 
         public static List<Workplace> GetWorkplaceList()
         {
-            return _sqlConnection.WorkplaceList();
+            return SqlConnection.WorkplaceList();
         }
     }
 }

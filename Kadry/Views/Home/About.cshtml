@@ -1,4 +1,5 @@
 ﻿
+@using System.Globalization
 @model Kadry.Models.Employeer
 
 <div class="row">
@@ -36,7 +37,7 @@
 
         <p>
             @Html.LabelFor(m => m.Sex)
-            @Html.Name(Model.Sex.ToString())
+            @Html.Name(Model.Sex)
         </p>
 
         <p>
@@ -57,13 +58,13 @@
 
         <p>
             @Html.LabelFor(m => m.Salary.Total)
-            @Html.Name(Model.Salary.Total.ToString())
+            @Html.Name(Model.Salary.Total.ToString(CultureInfo.InvariantCulture))
         </p>
 
 
         <p>
             @Html.LabelFor(m => m.Hours.HoursWorked)
-            @Html.Name(Model.Hours.HoursWorked.ToString())
+            @Html.Name(Model.Hours.HoursWorked.ToString(CultureInfo.InvariantCulture))
         </p>
 
 

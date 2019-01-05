@@ -16,7 +16,7 @@
                     <div class="card-header">
                         <h3>Menu</h3> </div>
                     <div class="card-body">
-                        <button class="btn btn-primary w-100 mt-2" onclick="location.href = '@Url.Action("About", "Home", new {id = @Request.Cookies["LoginCookie"].Value})';">
+                        <button class="btn btn-primary w-100 mt-2" onclick="location.href = '@Url.Action("About", "Home", new {id = @Request.Cookies["LoginCookie"]?.Value})';">
                             O mnie
                         </button>
                         <button class="btn btn-primary w-100 mt-2">
