@@ -245,7 +245,12 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Admin\EmployerList.cshtml" />
-    <Content Include="Views\Admin\DetailsEmployer.cshtml" />
+    <Content Include="Views\Admin\CreateEmployer.cshtml" />
+    <Content Include="Views\Admin\ContractTypeList.cshtml" />
+    <Content Include="Views\Admin\AddContract.cshtml" />
+    <Content Include="Views\Admin\WorkplaceList.cshtml" />
+    <Content Include="Views\Admin\AddWorkplace.cshtml" />
+    <Content Include="Views\Admin\ErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

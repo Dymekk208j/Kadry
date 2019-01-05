@@ -1,26 +1,39 @@
 ﻿@using Kadry.Models
 @model Kadry.Models.Employeer
 @{
-    ViewBag.Title = "DetailsEmployer";
+    ViewBag.Title = "CreateEmployer";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @section Title{
-    Edycja pracownika @Html.Name(Model.Firstname + " " + Model.Surname)
+  Dodanie pracownika 
 }
 
 @{
-    using (Html.BeginForm("CreateEmployer", "Admin"))
+    using (Html.BeginForm("Add", "Admin"))
     {
         <div class="row">
             <div class="col-7">
 
                 @Html.HiddenFor(m => m.Id)
 
-                @Html.LabelFor(m => m.Login.Id)
-                @Html.EditorFor(m => m.Login.Id, new {htmlAttributes = new {@class = "form-control"}})
-
+                @*@Html.LabelFor(m => m.Login.Id)
+                @Html.EditorFor(m => m.Login.Id, new {htmlAttributes = new {@class = "form-control"}})*@
+                
                 <p>
+                    @Html.LabelFor(m => m.Login.Username)
+                    @Html.EditorFor(m => m.Login.Username, new {htmlAttributes = new {@class = "form-control"}})
+                </p>
+                <p>
+                    @Html.LabelFor(m => m.Login.Password)
+                    @Html.EditorFor(m => m.Login.Password, new {htmlAttributes = new {@class = "form-control"}})
+                </p>
+                <p>
+
+                    @Html.CheckBoxFor(m => m.Login.Admin, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.LabelFor(m => m.Login.Admin)
+                </p>
+<p>
                     @Html.LabelFor(m => m.Firstname)
                     @Html.EditorFor(m => m.Firstname, new {htmlAttributes = new {@class = "form-control"}})
                 </p>
@@ -54,8 +67,7 @@
                 <p>
                     @Html.LabelFor(m => m.ContractType)
                     @Html.DropDownListFor(model => model.ContractType.Id, new SelectList(Employeer.GetContractTypeList(), "Id", "Name"), new {@class = "form-control"})
-                    @Html.EditorFor(m => m.ContractType.Name, new { htmlAttributes = new { @class = "form-control" } })
-
+                 
                 </p>
 
                 <p>
@@ -66,7 +78,7 @@
                 <p>
                     @Html.LabelFor(m => m.Workplace)
                     @Html.DropDownListFor(model => model.Workplace.Id, new SelectList(Employeer.GetWorkplaceList(), "Id", "Name"), new { @class = "form-control" })
-                    @Html.EditorFor(m => m.Workplace.Name, new { htmlAttributes = new { @class = "form-control" } })
+                  
 
                 </p>
 
@@ -91,8 +103,7 @@
         </div>
 
         <div class="float-right">
-            <button type="button" class="btn btn-danger">Usuń</button>
-            <button type="submit" class="btn btn-primary">Aktualizuj</button>
+            <button type="submit" class="btn btn-primary">Dodaj</button>
         </div>
         <!-- Modal od zarządzania urlopami -->
         <div class="modal fade" id="HolidayManagement" tabindex="-1" role="dialog" aria-labelledby="HolidayManagementLabel" aria-hidden="true">

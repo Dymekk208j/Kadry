@@ -121,7 +121,7 @@ namespace Kadry.Models
 
         public Employeer GetEmployer(int id)
         {
-            Employeer employer = new Employeer();
+            Employeer employer = null;
             string query = "SELECT * FROM Employeer WHERE id = " + id.ToString();
             //SELECT * FROM Employeer WHERE id=1
             SqlDataReader reader = Execute(query).ExecuteReader();
@@ -148,6 +148,7 @@ namespace Kadry.Models
                     var idMedical = int.Parse(reader["id_Medical"].ToString());
                     var idSalary = int.Parse(reader["id_Salary"].ToString());
                     var idHours = int.Parse(reader["id_Hours"].ToString());
+                    var idLogin = int.Parse(reader["id_Login"].ToString());
 
                     reader.Close();
 
@@ -157,6 +158,7 @@ namespace Kadry.Models
                     employer.Medical = GetMedical(idMedical);
                     employer.Salary = GetSalary(idSalary);
                     employer.Hours = GetHours(idHours);
+                    employer.Login = GetLogin(idLogin);
 
                 }
 
@@ -171,7 +173,7 @@ namespace Kadry.Models
 
         public ContractType GetContractType(int id)
         {
-            ContractType contract = new ContractType();
+            ContractType contract=null;
             string query = "SELECT * FROM Contract_type WHERE id = " + id.ToString();
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -197,7 +199,7 @@ namespace Kadry.Models
 
         public Workplace GetWorkplace(int id)
         {
-            Workplace workplace = new Workplace();
+            Workplace workplace = null;
             string query = "SELECT * FROM Workplace WHERE id = " + id.ToString();
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -222,7 +224,7 @@ namespace Kadry.Models
 
         public Workplace GetWorkplace(string name)
         {
-            Workplace workplace = new Workplace();
+            Workplace workplace =null;
             string query = "SELECT * FROM Workplace WHERE Workplace = " + name;
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -246,7 +248,7 @@ namespace Kadry.Models
         }
         public Holiday GetHoliday(int id)
         {
-            Holiday holiday = new Holiday();
+            Holiday holiday = null;
             string query = "SELECT * FROM Holiday WHERE id = " + id.ToString();
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -274,7 +276,7 @@ namespace Kadry.Models
 
         public Medical GetMedical(int id)
         {
-            Medical medical = new Medical();
+            Medical medical = null;
             string query = "SELECT * FROM Medical WHERE id = " + id.ToString();
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -301,7 +303,7 @@ namespace Kadry.Models
 
         public Salary GetSalary(int id)
         {
-            Salary salary = new Salary();
+            Salary salary = null;
             string query = "SELECT TOP 1 * FROM dbo.Salary  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
             SqlDataReader reader = Execute(query).ExecuteReader();
 
@@ -329,10 +331,42 @@ namespace Kadry.Models
             return salary;
 
         }
+        public Login GetLogin(int id)
+        {
+            Login login = null;
+            string query = "SELECT TOP 1 * FROM dbo.login  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
+            SqlDataReader reader = Execute(query).ExecuteReader();
+
+            try
+            {
+                while (reader.Read())
+                {
+                    login = new Login()
+                    {
+                        Id = int.Parse(reader["id"].ToString()),
+                        Username =reader["login"].ToString(),
+                        Password = reader["Password"].ToString(),
+                        Admin =Convert.ToBoolean(Int32.Parse(reader["admin"].ToString()))
+                      
+                       
+                    };
+
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }
+
+
+            return login;
+
+        }
+
 
         public Hours GetHours(int id)
         {
-            Hours hours = new Hours();
+            Hours hours = null;
             string query = "SELECT TOP 1 * FROM dbo.Hours  WHERE id = " + id.ToString() + "ORDER BY ID DESC ";
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
@@ -381,17 +415,16 @@ namespace Kadry.Models
 
         }
 
-        public bool IsAdmin(string username, string password)
+        public bool IsAdmin(int id)
         {
             bool _IsAdmin = false;
-            string query = "SELECT admin FROM LOGIN WHERE login = " + username;
+            string query = "SELECT admin FROM LOGIN WHERE id = " + id;
             SqlDataReader reader = Execute(query).ExecuteReader();
             try
             {
                 while (reader.Read())
                 {
-                    _IsAdmin = (Boolean.Parse(reader["Admin"].ToString()));
-
+                    _IsAdmin = Convert.ToBoolean(Int32.Parse(reader["Admin"].ToString()));
                 }
 
             }
@@ -473,12 +506,12 @@ namespace Kadry.Models
         {
             int returnId = -1;
 
-            string query = "INSERT INTO Workplace ([Workplace]) VALUES ('" + workplace + "')";
+            string query = "INSERT INTO Workplace ([Workplace]) VALUES ('" + workplace.Name + "')";
 
             Workplace workpl = GetWorkplace(workplace.Id);
             if (workpl != null)
             {
-                query = " UPDATE Workplace SET [Workplace] = (' " + workplace + "') WHERE id= " + workpl.Id;
+                query = " UPDATE Workplace SET [Workplace] = (' " + workplace.Name + "') WHERE id= " + workpl.Id;
                 returnId = workpl.Id;
             }
             try
@@ -501,7 +534,7 @@ namespace Kadry.Models
         {
             int returnId = -1;
 
-            string query = "INSERT INTO Medical ([Expiraton_date], [Number]) VALUES ('" + medical.ExpirationTime + "'," +
+            string query = "INSERT INTO Medical ([Expiration_date], [Number]) VALUES ('" + medical.ExpirationTime.ToShortDateString() + "'," +
                            medical.Number + ")";
 
 
@@ -530,7 +563,7 @@ namespace Kadry.Models
         {
             int returnId = -1;
 
-            string query = "INSERT INTO Holiday ([Holiday_anuses],[Remaining_holiday],[Year]) VALUES ('" + holiday.HolidayAnuses + "," + holiday.RemainingHoliday + "," + holiday.Year + "')";
+            string query = "INSERT INTO Holiday ([Holiday_anuses],[Remaining_holiday],[Year]) VALUES (" + holiday.HolidayAnuses + "," + holiday.RemainingHoliday + "," + holiday.Year + ")";
 
 
             Holiday hol = GetHoliday(holiday.Id);
@@ -561,7 +594,7 @@ namespace Kadry.Models
         {
             int returnId = -1;
 
-            string query = "INSERT INTO Salary [Base],[Bonus],[Overtime],[Total]) VALUES ('" + salary.Base + "," + salary.Bonus + "," + salary.Overtime + "," + salary.Total + "')";
+            string query = "INSERT INTO Salary ([Base],[Bonus],[Overtime],[Total]) VALUES (" + salary.Base + "," + salary.Bonus.GetValueOrDefault() + "," + salary.Overtime.GetValueOrDefault() + "," + salary.Total + ")";
 
 
             Salary sal = GetSalary(salary.Id);
@@ -588,7 +621,7 @@ namespace Kadry.Models
         {
             int returnId = -1;
 
-            string query = "INSERT INTO Hours [Hours_worked],[Quantity_overtime]) VALUES (" + hours.HoursWorked + "," + hours.QuantityOvertime + ")";
+            string query = "INSERT INTO Hours ([Hours_worked],[Quantity_overtime]) VALUES (" + hours.HoursWorked + "," + hours.QuantityOvertime + ")";
 
 
             Hours hou = GetHours(hours.Id);
@@ -638,6 +671,29 @@ namespace Kadry.Models
             return GetLastId("Contract_type");
         }
 
+        public int CreateLogin(Login login)
+            {
+                int returnId = -1;
+
+                string query = "INSERT INTO login VALUES ('" + login.Username + "','" + login.Password + "'," +
+                               (login.Admin ? "1" : "0") + ")";
+                
+            
+                try
+                {
+                    Execute(query).ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e);
+                    return returnId;
+                }
+
+                return GetLastId("login");
+            }
+        
+
+
         public int CreateEmployer(Employeer employer)
         {
             int returnId = -1;
@@ -666,7 +722,7 @@ namespace Kadry.Models
                 "'" + employer.Pesel + "', " +
                 "'" + employer.Birthday.ToShortDateString() + "', " +
                 "'" + employer.Sex + "', " +
-                employer.Login.Id.ToString() + ", " +
+                CreateLogin(employer.Login) + ", " +
 
                  CreateOrUpdateContract(employer.ContractType).ToString() + ", " +
                  CreateOrUpdateHours(employer.Hours).ToString() + ", " +
@@ -688,6 +744,25 @@ namespace Kadry.Models
             }
 
             return GetLastId("Employeer");
+        }
+
+        public void RemoveEmployeer(int id)
+        {   //Holiday, Hours,login,Medical, Salary
+
+            var emplo = GetEmployer(id);
+            string query = "Delete FROM Holiday where id=" +emplo.Holiday.Id;
+                Execute(query).ExecuteNonQuery();
+            query = "Delete FROM Hours where id=" + emplo.Hours.Id;
+            Execute(query).ExecuteNonQuery();
+            query = "Delete FROM login where id=" + emplo.Login.Id;
+            Execute(query).ExecuteNonQuery();
+            query = "Delete FROM Medical where id=" + emplo.Medical.Id;
+            Execute(query).ExecuteNonQuery();
+            query = "Delete FROM Salary where id=" +emplo.Salary.Id;
+            Execute(query).ExecuteNonQuery();
+            query = "Delete FROM Employeer where id=" + id;
+            Execute(query).ExecuteNonQuery();
+
         }
 
     }
